@@ -16,6 +16,7 @@ Route::get('/', function()
 
     $reviews = Yelp::listReviews();
 
+
 	return View::make('yelp/display', [
         'reviews' => $reviews
     ]);
@@ -25,18 +26,18 @@ Route::get('/', function()
 Route::get('/restaurant/{id}/reviews', function($id){
 
     $reviews = Yelp::listReviews();
-    $theReview = "";
+    $theReview = array();
     $api = "";
     $json = "";
     foreach ($reviews as $review) :
         if($review->id == $id):
-            $theReview = $review;
-            break;
+            array_push($theReview,$review);
+
         endif;
     endforeach;
 
-    if($theReview->facebook_page):
-        $api = new \Yelp\Facebook\FacebookPage($theReview->facebook_page);
+    if($theReview[0]->facebook_page):
+        $api = new \Yelp\Facebook\FacebookPage($theReview[0]->facebook_page);
         $json = $api->getResults();
     endif;
 
